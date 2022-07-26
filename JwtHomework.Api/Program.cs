@@ -25,6 +25,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+//Exceptionları handler etigimiz middleware
+app.UseCustomExeption();
+
 app.UseAuthorization();
 
 app.MapControllers();

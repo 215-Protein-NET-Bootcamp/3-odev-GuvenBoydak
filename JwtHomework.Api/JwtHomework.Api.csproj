@@ -7,11 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.1.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Controllers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JwtHomework.Base\JwtHomework.Base.csproj" />
+    <ProjectReference Include="..\JwtHomework.Business\JwtHomework.Business.csproj" />
   </ItemGroup>
 
 </Project>

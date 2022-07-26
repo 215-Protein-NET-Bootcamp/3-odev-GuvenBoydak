@@ -1,4 +1,5 @@
-﻿using JwtHomework.DataAccess;
+﻿using JwtHomework.Base;
+using JwtHomework.DataAccess;
 using JwtHomework.Entities;
 
 namespace JwtHomework.Business

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace JwtHomework.Entities
+namespace JwtHomework.Base
 {
     public class CustomResponseDto<T>
     {

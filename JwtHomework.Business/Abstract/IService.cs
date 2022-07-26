@@ -1,4 +1,5 @@
-﻿using JwtHomework.Entities;
+﻿using JwtHomework.Base;
+using JwtHomework.Entities;
 
 namespace JwtHomework.Business
 {

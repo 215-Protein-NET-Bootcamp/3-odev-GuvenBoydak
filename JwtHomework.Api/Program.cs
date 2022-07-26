@@ -1,6 +1,13 @@
+﻿using FluentValidation.AspNetCore;
+using JwtHomework.Api;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+
+//Default FluentValidation Filterini devre dışı bırakıp kendi yazdıgımız ValidatorFilterAttribute u ekliyoruz.
+builder.Services.AddControllers(option => option.Filters.Add<ValidatorFilterAttribute>()).AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<JwtHomework.Business.PersonAddDtoValidator>());
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

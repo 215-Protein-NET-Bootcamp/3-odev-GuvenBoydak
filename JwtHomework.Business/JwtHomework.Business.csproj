@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\JwtHomework.Base\JwtHomework.Base.csproj" />
     <ProjectReference Include="..\JwtHomework.DataAccess\JwtHomework.DataAccess.csproj" />
     <ProjectReference Include="..\JwtHomework.Entities\JwtHomework.Entities.csproj" />

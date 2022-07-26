@@ -17,11 +17,11 @@ namespace JwtHomework.DataAccess
         {
             using (IDbConnection con=_db.CreateConnection())
             {
-                await con.ExecuteAsync("insert into  \"Accounts\" ( \"UserName\", \"Password\", \"Name\", \"Email\",\"LastActivity\",\"CreatedDate\",\"Status\") VALUES (@username,@password,@email,@name,@lastactivity,@createddate,@status)",
+                await con.ExecuteAsync("insert into  \"Accounts\" ( \"UserName\", \"PasswordHash\", \"Name\", \"Email\",\"LastActivity\",\"CreatedDate\",\"Status\") VALUES (@username,@PasswordHash,@email,@name,@lastactivity,@createddate,@status)",
                     new
                     {
                         username=entity.UserName,
-                        password=entity.Password, 
+                        PasswordHash=entity.PasswordHash, 
                         name=entity.Name,
                         email=entity.Email,
                         lastactivity=entity.LastActivity,
@@ -78,11 +78,11 @@ namespace JwtHomework.DataAccess
                 //DeletedDate null degilse bir silme işleminin update edildigi anlayıp status'u deleted yapıp pasif delete yapıyoruz.
                 if (entity.DeletedDate != null)
                 {
-                    con.Execute("update \"Accounts\"  \"UserName\"=@username, \"Password\"=@password, \"Email\"=@email, \"Name\"=@name, \"LastActivity\"=@lastactivity,\"DeletedDate\"=@deleteddate,\"Status\"=@status where \"Id\"=@id", new
+                    con.Execute("update \"Accounts\"  \"UserName\"=@username, \"PasswordHash\"=@passwordhash, \"Email\"=@email, \"Name\"=@name, \"LastActivity\"=@lastactivity,\"DeletedDate\"=@deleteddate,\"Status\"=@status where \"Id\"=@id", new
                     {
                         id = entity.Id,
                         username = entity.UserName,
-                        password = entity.Password,
+                        passwordhash = entity.PasswordHash,
                         email = entity.Email,
                         name = entity.Name,
                         lastactivity = entity.LastActivity,
@@ -98,18 +98,18 @@ namespace JwtHomework.DataAccess
                     Account updateAccount= await GetByIdAsync(entity.Id);
 
                     entity.UserName = updateAccount.UserName != default ? entity.UserName : updateAccount.UserName;
-                    entity.Password = updateAccount.Password != default ? entity.Password : updateAccount.Password;
+                    entity.PasswordHash = updateAccount.PasswordHash != default ? entity.PasswordHash : updateAccount.PasswordHash;
                     entity.Email = updateAccount.Email != default ? entity.Email : updateAccount.Email;
                     entity.Name = updateAccount.Name != default ? entity.Name : updateAccount.Name;
                     entity.LastActivity = updateAccount.LastActivity != default ? entity.LastActivity : updateAccount.LastActivity;
                     entity.UpdatedDate = updateAccount.UpdatedDate != default ? entity.UpdatedDate : updateAccount.UpdatedDate;
 
-                    con.Execute("update \"Accounts\" \"UserName\"=@username, \"Password\"=@password, \"Email\"=@email, \"Name\"=@name, \"LastActivity\"=@lastactivity,\"UpdatedDate\"=@updateddate,\"Status\"=@status where \"Id\"=@id", new
+                    con.Execute("update \"Accounts\" \"UserName\"=@username, \"PasswordHash\"=@passwordhash, \"Email\"=@email, \"Name\"=@name, \"LastActivity\"=@lastactivity,\"UpdatedDate\"=@updateddate,\"Status\"=@status where \"Id\"=@id", new
                     {
 
                         id = entity.Id,
                         username = entity.UserName,
-                        password = entity.Password,
+                        passwordhash = entity.PasswordHash,
                         email = entity.Email,
                         name = entity.Name,
                         lastactivity = entity.LastActivity,

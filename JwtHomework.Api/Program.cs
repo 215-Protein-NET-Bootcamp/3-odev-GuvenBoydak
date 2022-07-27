@@ -1,5 +1,6 @@
 ﻿using FluentValidation.AspNetCore;
 using JwtHomework.Api;
+using JwtHomework.Base;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,8 +10,10 @@ var builder = WebApplication.CreateBuilder(args);
 //Default FluentValidation Filterini devre dışı bırakıp kendi yazdıgımız ValidatorFilterAttribute u ekliyoruz.
 builder.Services.AddControllers(option => option.Filters.Add<ValidatorFilterAttribute>()).AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<JwtHomework.Business.PersonAddDtoValidator>());
 
-//Custom Service Injection
+//Extension Service Injection
 builder.Services.AddDependencyInjection();
+builder.Services.AddCustomizeSwagger();
+builder.Services.AddJwtBearerAuthentication(builder.Configuration);
 
 builder.Services.AddControllers();
 
@@ -20,17 +23,32 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+
+
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+
 }
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.DefaultModelsExpandDepth(-1); // Remove Schema on Swagger UI
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Patika");
+    c.DocumentTitle = "Patika";
+});
 
 app.UseHttpsRedirection();
 
 //Exceptionları handler etigimiz middleware
 app.UseCustomExeption();
+
+app.UseAuthentication();
+
+app.UseRouting();
 
 app.UseAuthorization();
 

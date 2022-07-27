@@ -18,18 +18,15 @@ namespace JwtHomework.Business
 
         public async Task<AccessToken> CreateAccessTokenAsync(Account entity)
         {
-            //Kullanıcı varmı kontrol ediyoruz.
-            Account account = await _accountRepository.GetByUserAsync(entity.UserName);
-            if (account == null)
-                throw new InvalidOperationException("User Not Found");
-
-            //LastActivity güncelliyoruz.
-            account.LastActivity = DateTime.Now;
-            await _accountRepository.UpdateAsync(account);
-
+            ////Kullanıcı varmı kontrol ediyoruz.
+            //Account account = await _accountRepository.GetByUserAsync(entity.UserName);
+            //if (account != null)
+            //{
+            //    throw new InvalidOperationException("User is Exist");
+            //}
 
             //Token oluşturuyoruz.
-            AccessToken accessToken = _tokenHelper.CreateToken(account);
+            AccessToken accessToken = _tokenHelper.CreateToken(entity);
 
             return accessToken;
         }
@@ -67,42 +64,49 @@ namespace JwtHomework.Business
           await _accountRepository.AddAsync(entity);
         }
 
-        public async Task LoginAsync(AccountLoginDto entity)
+        public async Task<Account> LoginAsync(AccountLoginDto entity)
         {
             Account account = await _accountRepository.GetByUserAsync(entity.UserName);
 
             if (account == null)
                 throw new InvalidOperationException("User Not Found");
 
+            //LastActivity güncelliyoruz.
+            account.LastActivity = DateTime.Now;
+            await _accountRepository.UpdateAsync(account);
+
             //Kullanıcının girdigi password ile database oluşturulan passwordHash ve passwordSalt kontrol ediyoruz.
-            if(!HashingHelper.VerifyPasswordHash(entity.Password,account.PasswordHash,account.PasswordSalt))
+            if (!HashingHelper.VerifyPasswordHash(entity.Password,account.PasswordHash,account.PasswordSalt))
                 throw new InvalidOperationException("User Password Does Not Match ");
+            return account;
         }
 
-        public async Task RegisterAsync(AccountRegisterDto entity)
+        public async Task<Account> RegisterAsync(AccountRegisterDto entity)
         {
-            try
-            {
-                //PasswordHash oluşturuyoruz.
-                byte[] passwordHash, passwordSalt;
-                HashingHelper.CreatePasswordHash(entity.Password, out passwordHash, out passwordSalt);
+            //PasswordHash oluşturuyoruz.
+            byte[] passwordHash, passwordSalt;
+            HashingHelper.CreatePasswordHash(entity.Password, out passwordHash, out passwordSalt);
 
-                Account account = new Account
-                {
-                    UserName = entity.UserName,
-                    PasswordHash = passwordHash,
-                    PasswordSalt = passwordSalt,
-                    Email = entity.Email,
-                    Name = entity.Name,
-                    LastActivity = DateTime.Now,
-                };
+            Account account = new Account
+            {
+                UserName = entity.UserName,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt,
+                Email = entity.Email,
+                Name = entity.Name,
+                LastActivity = DateTime.Now,
+            };
+
+            try
+            { 
                 await _accountRepository.AddAsync(account);
             }
             catch (Exception)
             {
 
                 throw new Exception($"Register_Error {typeof(Person).Name}");
-            }        
+            }
+            return account;
         }
 
         public async Task RemoveAsync(Account entity)

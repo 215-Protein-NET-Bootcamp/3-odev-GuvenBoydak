@@ -9,7 +9,7 @@ namespace JwtHomework.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PeopleController : ControllerBase
+    public class PeopleController : CustomBaseController
     {
         private readonly IPersonService _personService;
         private readonly IMapper _mapper;
@@ -28,11 +28,11 @@ namespace JwtHomework.Api.Controllers
 
             List<PersonListDto> peopleListDto = _mapper.Map<List<PersonListDto>>(people);
 
-            return Ok(peopleListDto);
+            return CreateActionResult(CustomResponseDto<List<PersonListDto>>.Success(200, peopleListDto));
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById([FromRoute]int id)
         {
            Person person = await _personService.GetByIdAsync(id);
             if (person == null)
@@ -40,32 +40,33 @@ namespace JwtHomework.Api.Controllers
 
             PersonDto personDto=_mapper.Map<PersonDto>(person);
 
-            return Ok(personDto);
+            return CreateActionResult(CustomResponseDto<PersonDto>.Success(200, personDto));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(PersonAddDto personAddDto)
+        public async Task<IActionResult> Add([FromBody]PersonAddDto personAddDto)
         {
             Person person = _mapper.Map<Person>(personAddDto);
 
             await _personService.InsertAsync(person);
 
-            return Ok();
+            //Client a data dönmiyecegimiz yerde NoContentDto kullanarak statusCode dönüyoruz.
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(204));
         }
 
 
         [HttpPut]
-        public async Task<IActionResult> Update(PersonUpdateDto personUpdateDto)
+        public async Task<IActionResult> Update([FromBody]PersonUpdateDto personUpdateDto)
         {
             Person person = _mapper.Map<Person>(personUpdateDto);
 
             await _personService.UpdateAsync(person);
 
-            return Ok();
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(204));
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete([FromRoute]int id)
         {
             Person person = await _personService.GetByIdAsync(id);
 
@@ -73,8 +74,7 @@ namespace JwtHomework.Api.Controllers
 
             await _personService.RemoveAsync(deletePerson);
 
-            return Ok();
-
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(204));
         }
     }
 }

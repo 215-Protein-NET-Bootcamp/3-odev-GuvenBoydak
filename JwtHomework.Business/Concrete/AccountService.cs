@@ -16,12 +16,12 @@ namespace JwtHomework.Business
             _tokenHelper = tokenHelper;
         }
 
-        public async Task<CustomResponseDto<AccessToken>> CreateAccessToken(Account entity)
+        public async Task<AccessToken> CreateAccessTokenAsync(Account entity)
         {
             //Kullanıcı varmı kontrol ediyoruz.
             Account account = await _accountRepository.GetByUserAsync(entity.UserName);
             if (account == null)
-                return CustomResponseDto<AccessToken>.Fail(404,"User Not Found");
+                throw new InvalidOperationException("User Not Found");
 
             //LastActivity güncelliyoruz.
             account.LastActivity = DateTime.Now;
@@ -31,96 +31,104 @@ namespace JwtHomework.Business
             //Token oluşturuyoruz.
             AccessToken accessToken = _tokenHelper.CreateToken(account);
 
-            return CustomResponseDto<AccessToken>.Success(200,accessToken);
+            return accessToken;
         }
 
-        public async Task<CustomResponseDto<IEnumerable<Account>>> GetActivesAsync()
+        public async Task<List<Account>> GetActivesAsync()
         {
-            IEnumerable<Account> accounts= await _accountRepository.GetActiveAsync();
-
-            return CustomResponseDto<IEnumerable<Account>>.Success(200, accounts);
+            return  await _accountRepository.GetActiveAsync();
         }
 
-        public async Task<CustomResponseDto<IEnumerable<Account>>> GetAllAsync()
+        public async Task<List<Account>> GetAllAsync()
         {
-            IEnumerable<Account> accounts= await _accountRepository.GetAllAsync();
-
-            return CustomResponseDto<IEnumerable<Account>>.Success(200, accounts);
+            return await _accountRepository.GetAllAsync();
         }
 
-        public async Task<CustomResponseDto<Account>> GetByIdAsync(int id)
+        public async Task<Account> GetByIdAsync(int id)
         {
             Account account = await _accountRepository.GetByIdAsync(id);
             if (account == null)
-                return CustomResponseDto<Account>.Fail(404, $"{typeof(Account).Name}({id}) Not Found ");
+                throw new InvalidOperationException($"{typeof(Person).Name}({id}) Not Found ");
 
-            return CustomResponseDto<Account>.Success(200, account);
+            return account;
         }
 
-        public async Task<CustomResponseDto<Account>> GetByUserAsync(string userName)
+        public async Task<Account> GetByUserAsync(string userName)
         {
             Account account = await _accountRepository.GetByUserAsync(userName);
 
             if(account == null)
-                return CustomResponseDto<Account>.Fail(404,"User Not Found");
-
-
-            return CustomResponseDto<Account>.Success(200, account);
+                throw new InvalidOperationException("User Not Found");
+            return account;
         }
 
-        public async Task<CustomResponseDto<Account>> InsertAsync(Account entity)
+        public async Task InsertAsync(Account entity)
         {
-            await _accountRepository.AddAsync(entity);
-
-            return CustomResponseDto<Account>.Success(200);
+          await _accountRepository.AddAsync(entity);
         }
 
-        public async Task<CustomResponseDto<Account>> Login(AccountLoginDto entity)
+        public async Task LoginAsync(AccountLoginDto entity)
         {
             Account account = await _accountRepository.GetByUserAsync(entity.UserName);
 
             if (account == null)
-                return CustomResponseDto<Account>.Fail(404, "User Not Found");
+                throw new InvalidOperationException("User Not Found");
 
             //Kullanıcının girdigi password ile database oluşturulan passwordHash ve passwordSalt kontrol ediyoruz.
             if(!HashingHelper.VerifyPasswordHash(entity.Password,account.PasswordHash,account.PasswordSalt))
-                return CustomResponseDto<Account>.Fail(404, "User Password Does Not Match ");
-
-            return CustomResponseDto<Account>.Success(200);
+                throw new InvalidOperationException("User Password Does Not Match ");
         }
 
-        public async Task<CustomResponseDto<Account>> RegisterAsync(AccountRegisterDto entity)
+        public async Task RegisterAsync(AccountRegisterDto entity)
         {
-            //PasswordHash oluşturuyoruz.
-            byte[] passwordHash, passwordSalt;
-            HashingHelper.CreatePasswordHash(entity.Password, out passwordHash, out passwordSalt);
-
-            Account account = new Account
+            try
             {
-                UserName = entity.UserName,
-                PasswordHash = passwordHash,
-                PasswordSalt = passwordSalt,
-                Email = entity.Email,
-                Name = entity.Name,
-                LastActivity = DateTime.Now,
-            };
-            await _accountRepository.AddAsync(account);
+                //PasswordHash oluşturuyoruz.
+                byte[] passwordHash, passwordSalt;
+                HashingHelper.CreatePasswordHash(entity.Password, out passwordHash, out passwordSalt);
 
-            return CustomResponseDto<Account>.Success(200);
+                Account account = new Account
+                {
+                    UserName = entity.UserName,
+                    PasswordHash = passwordHash,
+                    PasswordSalt = passwordSalt,
+                    Email = entity.Email,
+                    Name = entity.Name,
+                    LastActivity = DateTime.Now,
+                };
+                await _accountRepository.AddAsync(account);
+            }
+            catch (Exception)
+            {
+
+                throw new Exception($"Register_Error {typeof(Person).Name}");
+            }        
         }
 
-        public async Task<CustomResponseDto<Account>> RemoveAsync(Account entity)
+        public async Task RemoveAsync(Account entity)
         {
-            await _accountRepository.DeleteAsync(entity);
+            try
+            {
+                await _accountRepository.DeleteAsync(entity);
+            }
+            catch (Exception)
+            {
 
-            return CustomResponseDto<Account>.Success(200);
+                throw new Exception($"Delete_Error {typeof(Account).Name}");
+            }      
         }
 
-        public async  Task<CustomResponseDto<Account>> UpdateAsync(Account entity)
+        public async  Task UpdateAsync(Account entity)
         {
-            await _accountRepository.UpdateAsync(entity);
+            try
+            {
+                await _accountRepository.UpdateAsync(entity);
+            }
+            catch (Exception)
+            {
 
-            return CustomResponseDto<Account>.Success(200);
+                throw new Exception($"Update_Error {typeof(Account).Name}");
+            }      
         }
     }
 }

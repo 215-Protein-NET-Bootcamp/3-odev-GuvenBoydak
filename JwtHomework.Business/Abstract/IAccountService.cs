@@ -6,12 +6,12 @@ namespace JwtHomework.Business
 {
     public interface IAccountService:IService<Account>
     {
-        Task<CustomResponseDto<Account>> RegisterAsync(AccountRegisterDto entity);
+        Task RegisterAsync(AccountRegisterDto entity);
 
-        Task<CustomResponseDto<Account>> Login(AccountLoginDto entity);
+        Task LoginAsync(AccountLoginDto entity);
 
-        Task<CustomResponseDto<Account>> GetByUserAsync(string userName);
+        Task<Account> GetByUserAsync(string userName);
 
-        Task<CustomResponseDto<AccessToken>> CreateAccessToken(Account entity);
+        Task<AccessToken> CreateAccessTokenAsync(Account entity);
     }
 }

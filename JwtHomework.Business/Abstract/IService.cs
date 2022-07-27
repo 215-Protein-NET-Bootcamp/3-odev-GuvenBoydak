@@ -1,20 +1,17 @@
-﻿using JwtHomework.Base;
-using JwtHomework.Entities;
-
-namespace JwtHomework.Business
+﻿namespace JwtHomework.Business
 {
-    public interface IService<T> where T : BaseEntity
+    public interface IService<T> where T : class
     {
-        Task<CustomResponseDto<T>> GetByIdAsync(int id);
+        Task<T> GetByIdAsync(int id);
 
-        Task<CustomResponseDto<IEnumerable<T>>> GetAllAsync();
+        Task<List<T>> GetAllAsync();
 
-        Task<CustomResponseDto<IEnumerable<T>>> GetActivesAsync();
+        Task<List<T>> GetActivesAsync();
 
-        Task<CustomResponseDto<T>> InsertAsync(T entity);
+        Task InsertAsync(T entity);
 
-        Task<CustomResponseDto<T>> UpdateAsync(T entity);
+        Task UpdateAsync(T entity);
 
-        Task<CustomResponseDto<T>> RemoveAsync(T entity);
+        Task RemoveAsync(T entity);
     }
 }

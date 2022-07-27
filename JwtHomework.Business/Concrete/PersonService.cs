@@ -8,54 +8,71 @@ namespace JwtHomework.Business
     {
         private readonly IPersonRepository _personRepository;
 
+
+
         public PersonService(IPersonRepository personRepository)
         {
             _personRepository = personRepository;
         }
 
-        public async Task<CustomResponseDto<IEnumerable<Person>>> GetActivesAsync()
+        public async Task<List<Person>> GetActivesAsync()
         {
-            IEnumerable < Person > people= await _personRepository.GetActiveAsync();
-
-            return CustomResponseDto<IEnumerable<Person>>.Success(200, people);
+            return await _personRepository.GetActiveAsync();
         }
 
-        public async Task<CustomResponseDto<IEnumerable<Person>>> GetAllAsync()
+        public async Task<List<Person>> GetAllAsync()
         {
-            IEnumerable<Person> people= await _personRepository.GetAllAsync();
-
-            return CustomResponseDto<IEnumerable<Person>>.Success(200, people);
+            return await _personRepository.GetAllAsync();
         }
 
-        public async Task<CustomResponseDto<Person>> GetByIdAsync(int id)
+        public async Task<Person> GetByIdAsync(int id)
         {
             Person person = await _personRepository.GetByIdAsync(id);
             if (person == null)
-                return CustomResponseDto<Person>.Fail(404, $"{typeof(Person).Name}({id}) Not Found ");
-
-
-            return CustomResponseDto<Person>.Success(200,person);
+                throw new InvalidOperationException($"{typeof(Person).Name}({id}) Not Found ");
+            return person;
         }
 
-        public async Task<CustomResponseDto<Person>> InsertAsync(Person entity)
+        public async Task InsertAsync(Person entity)
         {
-            await _personRepository.AddAsync(entity);
+            try
+            {
+                await _personRepository.AddAsync(entity);
+            }
+            catch (Exception)
+            {
 
-            return CustomResponseDto<Person>.Success(200);
+                throw new Exception($"Save_Error {typeof(Person).Name}");
+            }
+            
         }
 
-        public async Task<CustomResponseDto<Person>> RemoveAsync(Person entity)
+        public async Task RemoveAsync(Person entity)
         {
-            await _personRepository.DeleteAsync(entity);
+            try
+            {
+                await _personRepository.DeleteAsync(entity);
+            }
+            catch (Exception)
+            {
 
-            return CustomResponseDto<Person>.Success(200);
+                throw new Exception($"Delete_Error {typeof(Person).Name}");
+            }
+            
         }
 
-        public async Task<CustomResponseDto<Person>> UpdateAsync(Person entity)
+        public async Task UpdateAsync(Person entity)
         {
-            await _personRepository.UpdateAsync(entity);
+            try
+            {
+                await _personRepository.UpdateAsync(entity);
+            }
+            catch (Exception)
+            {
 
-            return CustomResponseDto<Person>.Success(200);
+                throw new Exception($"Update_Error {typeof(Person).Name}");
+            }
+            
         }
     }
 }

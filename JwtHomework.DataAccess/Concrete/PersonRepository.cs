@@ -40,19 +40,21 @@ namespace JwtHomework.DataAccess
             await UpdateAsync(person);
         }
 
-        public async Task<IEnumerable<Person>> GetActiveAsync()
+        public async Task<List<Person>> GetActiveAsync()
         {
             using (IDbConnection con = _db.CreateConnection())
             {
-                return await con.QueryAsync<Person>("select * from  \"People\" where \"Status\" != '2' ");
+                IEnumerable<Person> people= await con.QueryAsync<Person>("select * from  \"People\" where \"Status\" != '2' ");
+                return people.ToList();
             }
         }
 
-        public async Task<IEnumerable<Person>> GetAllAsync()
+        public async Task<List<Person>> GetAllAsync()
         {
             using (IDbConnection con=_db.CreateConnection())
             {
-              return  await con.QueryAsync<Person>("select * from  \"People\" ");
+              IEnumerable<Person> people =await con.QueryAsync<Person>("select * from  \"People\" ");
+                return people.ToList();
             }
         }
 
@@ -71,7 +73,7 @@ namespace JwtHomework.DataAccess
                 //DeletedDate null degilse bir silme işleminin update edildigi anlayıp status'u deleted yapıp pasif delete yapıyoruz.
                 if (entity.DeletedDate != null)
                 {
-                    con.Execute("update \"People\"  \"FirstName\"=@firstname, \"LastName\"=lastname, \"Email\"=@email, \"Description\"=@description, \"Phone\"=@phone, \"DateOfBirth\"=@dateofbirth,\"DeletedDate\"=@deleteddate,\"Status\"=@status where \"Id\"=@id", new
+                    con.Execute("update \"People\" set  \"FirstName\"=@firstname, \"LastName\"=@lastname, \"Email\"=@email, \"Description\"=@description, \"Phone\"=@phone, \"DateOfBirth\"=@dateofbirth,\"DeletedDate\"=@deleteddate,\"Status\"=@status where \"Id\"=@id", new
                     {
                         id = entity.Id,
                         firstname = entity.FirstName,
@@ -99,7 +101,7 @@ namespace JwtHomework.DataAccess
                     entity.DateOfBirth = updatePerson.DateOfBirth != default ? entity.DateOfBirth : updatePerson.DateOfBirth;
                     entity.UpdatedDate = updatePerson.UpdatedDate != default ? entity.UpdatedDate : updatePerson.UpdatedDate;
 
-                    con.Execute("update  \"People\"  \"FirstName\"=@firstname, \"LastName\"=lastname, \"Email\"=@email, \"Description\"=@description, \"Phone\"=@phone, \"DateOfBirth\"=@dateofbirth,\"UpdatedDate\"=@updateddate,\"Status\"=@status where \"Id\"=@id", new
+                    con.Execute("update  \"People\" set \"FirstName\"=@firstname, \"LastName\"=@lastname, \"Email\"=@email, \"Description\"=@description, \"Phone\"=@phone, \"DateOfBirth\"=@dateofbirth,\"UpdatedDate\"=@updateddate,\"Status\"=@status where \"Id\"=@id", new
                     {
 
                         id = entity.Id,

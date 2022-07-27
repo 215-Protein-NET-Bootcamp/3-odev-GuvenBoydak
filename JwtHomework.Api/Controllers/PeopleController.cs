@@ -24,9 +24,9 @@ namespace JwtHomework.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            CustomResponseDto<IEnumerable<Person>> people = await _personService.GetActivesAsync();
+            List<Person> people = await _personService.GetActivesAsync();
 
-            CustomResponseDto<List<PersonListDto>> peopleListDto = _mapper.Map<CustomResponseDto<List<PersonListDto>>>(people);
+            List<PersonListDto> peopleListDto = _mapper.Map<List<PersonListDto>>(people);
 
             return Ok(peopleListDto);
         }
@@ -34,11 +34,11 @@ namespace JwtHomework.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            CustomResponseDto<Person> person = await _personService.GetByIdAsync(id);
+           Person person = await _personService.GetByIdAsync(id);
             if (person == null)
                 return BadRequest();
 
-            CustomResponseDto<PersonDto> personDto=_mapper.Map<CustomResponseDto<PersonDto>>(person);
+            PersonDto personDto=_mapper.Map<PersonDto>(person);
 
             return Ok(personDto);
         }
@@ -67,7 +67,7 @@ namespace JwtHomework.Api.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete(int id)
         {
-            CustomResponseDto<Person> person = await _personService.GetByIdAsync(id);
+            Person person = await _personService.GetByIdAsync(id);
 
             Person deletePerson = _mapper.Map<Person>(person);
 

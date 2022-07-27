@@ -4,9 +4,9 @@ namespace JwtHomework.DataAccess
 {
     public interface IRepository<T> where T : BaseEntity
     {
-        Task<IEnumerable<T>> GetAllAsync();
+        Task<List<T>> GetAllAsync();
 
-        Task<IEnumerable<T>> GetActiveAsync();
+        Task<List<T>> GetActiveAsync();
 
         Task<T> GetByIdAsync(int id);
 

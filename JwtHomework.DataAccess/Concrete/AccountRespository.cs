@@ -39,19 +39,21 @@ namespace JwtHomework.DataAccess
             await UpdateAsync(account);
         }
 
-        public async Task<IEnumerable<Account>> GetActiveAsync()
+        public async Task<List<Account>> GetActiveAsync()
         {
             using (IDbConnection con = _db.CreateConnection())
             {
-                return await con.QueryAsync<Account>("select * from \"Accounts\" where \"Status\" != '2'");
+                IEnumerable<Account> accounts= await con.QueryAsync<Account>("select * from \"Accounts\" where \"Status\" != '2'");
+                return accounts.ToList();
             }
         }
 
-        public async Task<IEnumerable<Account>> GetAllAsync()
+        public async Task<List<Account>> GetAllAsync()
         {
             using (IDbConnection con =_db.CreateConnection())
             {
-                return await con.QueryAsync<Account>("select * from \"Accounts\" ");
+                IEnumerable<Account> accounts= await con.QueryAsync<Account>("select * from \"Accounts\" ");
+                return accounts.ToList();
             }
         }
 

@@ -2,7 +2,9 @@
 using JwtHomework.Base;
 using JwtHomework.Business;
 using JwtHomework.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace JwtHomework.Api.Controllers
 {
@@ -27,7 +29,7 @@ namespace JwtHomework.Api.Controllers
 
             List<AccountListDto> accountListDtos = _mapper.Map<List<AccountListDto>>(accounts);
 
-            return CreateActionResult(CustomResponseDto<List<AccountListDto>>.Success(200,accountListDtos));
+            return CreateActionResult(CustomResponseDto<List<AccountListDto>>.Success(200,accountListDtos, "İşlem başarılı"));
         }
 
         [HttpGet("{id}")]
@@ -37,7 +39,7 @@ namespace JwtHomework.Api.Controllers
 
             AccountDto accountDto = _mapper.Map<AccountDto>(account);
 
-            return CreateActionResult(CustomResponseDto<AccountDto>.Success(200, accountDto));
+            return CreateActionResult(CustomResponseDto<AccountDto>.Success(200, accountDto, "İşlem başarılı"));
         }
 
         [HttpPost("register")]
@@ -47,9 +49,9 @@ namespace JwtHomework.Api.Controllers
             Account registerAccount =await _accountService.RegisterAsync(accountRegisterDto);
 
             //kayıt olan kullanıcı bilgileriyle bir Token yaratıyoruz.
-            AccessToken token = await _accountService.CreateAccessTokenAsync(registerAccount);
+            AccessToken token = _accountService.CreateAccessToken(registerAccount);
 
-            return CreateActionResult(CustomResponseDto<AccessToken>.Success(200,token));
+            return CreateActionResult(CustomResponseDto<AccessToken>.Success(200,token, "İşlem başarılı"));
         }
 
         [HttpPost("login")]
@@ -59,9 +61,9 @@ namespace JwtHomework.Api.Controllers
             Account account = await _accountService.LoginAsync(accountLoginDto);
 
             //Login olan kullanıcı bilgileriyle bir Token yaratıyoruz.
-            AccessToken token = await _accountService.CreateAccessTokenAsync(account);
+            AccessToken token = _accountService.CreateAccessToken(account);
 
-            return CreateActionResult(CustomResponseDto<AccessToken>.Success(200, token));
+            return CreateActionResult(CustomResponseDto<AccessToken>.Success(200, token, "İşlem başarılı"));
         }
 
         [HttpPut]
@@ -71,7 +73,7 @@ namespace JwtHomework.Api.Controllers
 
             await _accountService.UpdateAsync(account);
 
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(204));
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(204, "İşlem başarılı"));
         }
 
         [HttpDelete("{id}")]
@@ -81,11 +83,23 @@ namespace JwtHomework.Api.Controllers
 
             await _accountService.RemoveAsync(account);
 
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(204));
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(204, "İşlem başarılı"));
         }
 
+        [HttpPut("changePassword")]
+        [Authorize]
+        public async Task<IActionResult> UpdatePassword(AccountPasswordUpdateDto accountPasswordUpdateDto)
+        {
+            if(!CheckPassword.CheckingPassword(accountPasswordUpdateDto.NewPassword,accountPasswordUpdateDto.ConfirmPassword))
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Success(404,"Girilen şifreler uyuşmuyor."));
 
+            //user claimlerinden Accountid'nin degerini alıyoruz.
+            string accountId = (User.Identity as ClaimsIdentity).FindFirst("AccountId").Value;
 
+            
+            await _accountService.UpdatePasswordAsync(int.Parse(accountId),accountPasswordUpdateDto);
 
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(204, "İşlem başarılı"));
+        }
     }
 }

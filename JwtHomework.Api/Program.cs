@@ -1,6 +1,9 @@
 ﻿using FluentValidation.AspNetCore;
 using JwtHomework.Api;
 using JwtHomework.Base;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +16,26 @@ builder.Services.AddControllers(option => option.Filters.Add<ValidatorFilterAttr
 //Extension Service Injection
 builder.Services.AddDependencyInjection();
 builder.Services.AddCustomizeSwagger();
-builder.Services.AddJwtBearerAuthentication(builder.Configuration);
+
+
+//jwt 
+var tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<TokenOptions>();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidIssuer = tokenOptions.Issuer,
+                        ValidAudience = tokenOptions.Audience,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey)
+                    };
+                });
+
 
 builder.Services.AddControllers();
 
@@ -23,14 +45,11 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-
-
-
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-
+    app.UseDeveloperExceptionPage();
+    IdentityModelEventSource.ShowPII = true;
 }
 
 app.UseSwagger();
@@ -47,8 +66,6 @@ app.UseHttpsRedirection();
 app.UseCustomExeption();
 
 app.UseAuthentication();
-
-app.UseRouting();
 
 app.UseAuthorization();
 

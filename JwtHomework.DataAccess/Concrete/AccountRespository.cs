@@ -70,7 +70,7 @@ namespace JwtHomework.DataAccess
         {
             using (IDbConnection con = _db.CreateConnection())
             {
-                return= await con.QueryFirstOrDefaultAsync<Account>("select * from  \"Accounts\" where \"UserName\" = @username", new { username = userName });
+                return await con.QueryFirstOrDefaultAsync<Account>("select * from  \"Accounts\" where \"UserName\" = @username", new { username = userName });
                
             }
         }

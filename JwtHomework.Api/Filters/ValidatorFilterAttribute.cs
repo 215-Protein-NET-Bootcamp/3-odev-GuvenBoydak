@@ -14,7 +14,7 @@ namespace JwtHomework.Api
                 List<string> errors = context.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage).ToList();
 
                 //Contextden Gelen hataları CustomResponseDto ile  clienta dto olarak döndüruyoruz.
-                context.Result = new BadRequestObjectResult(CustomResponseDto<NoContentDto>.Fail(404, errors));
+                context.Result = new BadRequestObjectResult(CustomResponseDto<NoContentDto>.Fail(404, errors,"Hatalı işlem"));
 
             }
         }

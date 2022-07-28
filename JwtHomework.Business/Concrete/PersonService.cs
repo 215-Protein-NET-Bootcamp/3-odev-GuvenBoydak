@@ -25,6 +25,11 @@ namespace JwtHomework.Business
             return await _personRepository.GetAllAsync();
         }
 
+        public async Task<IEnumerable<Person>> GetByAccountIdAsync(int id)
+        {
+            return await _personRepository.GetByAccountIdAsync(id);
+        }
+
         public async Task<Person> GetByIdAsync(int id)
         {
             Person person = await _personRepository.GetByIdAsync(id);

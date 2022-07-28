@@ -11,26 +11,27 @@ namespace JwtHomework.Base
 
         public List<string> Error { get; set; }
 
+        public string Message { get; set; }
 
         //static Factory Method Dessing Pattern.
-        public static CustomResponseDto<T> Success(int statusCode, T data)
+        public static CustomResponseDto<T> Success(int statusCode, T data,string message)
         {
-            return new CustomResponseDto<T>() { Data = data, StatusCode = statusCode };
+            return new CustomResponseDto<T>() { Data = data, StatusCode = statusCode ,Message=message};
         }
 
-        public static CustomResponseDto<T> Success(int statusCode)
+        public static CustomResponseDto<T> Success(int statusCode,string message)
         {
-            return new CustomResponseDto<T>() { StatusCode = statusCode };
+            return new CustomResponseDto<T>() { StatusCode = statusCode , Message = message };
         }
 
-        public static CustomResponseDto<T> Fail(int statusCode, List<string> errors)
+        public static CustomResponseDto<T> Fail(int statusCode, List<string> errors, string message)
         {
-            return new CustomResponseDto<T>() { StatusCode = statusCode, Error = errors };
+            return new CustomResponseDto<T>() { StatusCode = statusCode, Error = errors, Message = message };
         }
 
-        public static CustomResponseDto<T> Fail(int statusCode, string error)
+        public static CustomResponseDto<T> Fail(int statusCode, string error, string message)
         {
-            return new CustomResponseDto<T>() { StatusCode = statusCode, Error = new List<string> { error } };
+            return new CustomResponseDto<T>() { StatusCode = statusCode, Error = new List<string> { error }, Message = message };
         }
     }
 }

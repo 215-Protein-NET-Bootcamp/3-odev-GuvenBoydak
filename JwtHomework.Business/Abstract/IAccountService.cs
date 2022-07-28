@@ -12,6 +12,9 @@ namespace JwtHomework.Business
 
         Task<Account> GetByUserAsync(string userName);
 
-        Task<AccessToken> CreateAccessTokenAsync(Account entity);
+        AccessToken CreateAccessToken(Account entity);
+
+        Task UpdatePasswordAsync(int id,AccountPasswordUpdateDto entity);
+
     }
 }

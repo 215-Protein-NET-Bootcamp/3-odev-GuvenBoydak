@@ -36,10 +36,10 @@ namespace JwtHomework.Api
                     CustomResponseDto<NoContentDto> response;
                     if(statusCode==404)
                     {
-                        response = CustomResponseDto<NoContentDto>.Fail(statusCode, "An Error Occurred");
+                        response = CustomResponseDto<NoContentDto>.Fail(statusCode, "An Error Occurred", "Hatalı işlem");
                     }
                     //Kendi yazdıgımız CustomResponseDto nun fail methoduna statuscode ve error u veriyoruz.
-                    response = CustomResponseDto<NoContentDto>.Fail(statusCode, exceptionFeature.Error.Message);
+                    response = CustomResponseDto<NoContentDto>.Fail(statusCode, exceptionFeature.Error.Message, "Hatalı işlem");
 
                     // Response u WriteAsync ile yazdırıyoruz. JsonSerializer.Serialize(response) ile response u json dizesine dönüştürdük.
                     await context.Response.WriteAsync(JsonSerializer.Serialize(response));

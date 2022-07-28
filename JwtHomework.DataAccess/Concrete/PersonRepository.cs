@@ -58,6 +58,14 @@ namespace JwtHomework.DataAccess
             }
         }
 
+        public async Task<IEnumerable<Person>> GetByAccountIdAsync(int id)
+        {
+            using (IDbConnection con = _db.CreateConnection())
+            {
+                return await con.QueryAsync<Person>("select * from  \"People\" where \"AccountId\" =@accountid ", new { accountid = id });
+            }
+        }
+
         public async Task<Person> GetByIdAsync(int id)
         {
             using (IDbConnection con =_db.CreateConnection())

@@ -16,15 +16,8 @@ namespace JwtHomework.Business
             _tokenHelper = tokenHelper;
         }
 
-        public async Task<AccessToken> CreateAccessTokenAsync(Account entity)
+        public  AccessToken CreateAccessToken(Account entity)
         {
-            ////Kullanıcı varmı kontrol ediyoruz.
-            //Account account = await _accountRepository.GetByUserAsync(entity.UserName);
-            //if (account != null)
-            //{
-            //    throw new InvalidOperationException("User is Exist");
-            //}
-
             //Token oluşturuyoruz.
             AccessToken accessToken = _tokenHelper.CreateToken(entity);
 
@@ -45,7 +38,7 @@ namespace JwtHomework.Business
         {
             Account account = await _accountRepository.GetByIdAsync(id);
             if (account == null)
-                throw new InvalidOperationException($"{typeof(Person).Name}({id}) Not Found ");
+                throw new InvalidOperationException($"{typeof(Account).Name}({id}) Not Found ");
 
             return account;
         }
@@ -55,7 +48,7 @@ namespace JwtHomework.Business
             Account account = await _accountRepository.GetByUserAsync(userName);
 
             if(account == null)
-                throw new InvalidOperationException("User Not Found");
+                throw new InvalidOperationException($"{typeof(Account).Name}({userName})User Not Found");
             return account;
         }
 
@@ -69,7 +62,7 @@ namespace JwtHomework.Business
             Account account = await _accountRepository.GetByUserAsync(entity.UserName);
 
             if (account == null)
-                throw new InvalidOperationException("User Not Found");
+                throw new InvalidOperationException($"{typeof(Account).Name}({entity.UserName}) User Not Found");
 
             //LastActivity güncelliyoruz.
             account.LastActivity = DateTime.Now;
@@ -77,7 +70,7 @@ namespace JwtHomework.Business
 
             //Kullanıcının girdigi password ile database oluşturulan passwordHash ve passwordSalt kontrol ediyoruz.
             if (!HashingHelper.VerifyPasswordHash(entity.Password,account.PasswordHash,account.PasswordSalt))
-                throw new InvalidOperationException("User Password Does Not Match ");
+                throw new InvalidOperationException($"{typeof(Account).Name} User Password Does Not Match ");
             return account;
         }
 
@@ -133,6 +126,24 @@ namespace JwtHomework.Business
 
                 throw new Exception($"Update_Error {typeof(Account).Name}");
             }      
+        }
+
+        public async Task UpdatePasswordAsync(int id,AccountPasswordUpdateDto entity)
+        {
+            Account account =await _accountRepository.GetByIdAsync(id);
+
+            //Kullanıcının girdigi password ile database oluşturulan passwordHash ve passwordSalt kontrol ediyoruz.
+            if (!HashingHelper.VerifyPasswordHash(entity.OldPassword, account.PasswordHash, account.PasswordSalt))
+                throw new InvalidOperationException($"{typeof(Account).Name} User Password Does Not Match ");
+
+            //PasswordHash oluşturuyoruz.
+            byte[] passwordHash, passwordSalt;
+            HashingHelper.CreatePasswordHash(entity.NewPassword, out passwordHash, out passwordSalt);
+
+            account.PasswordHash = passwordHash;
+            account.PasswordSalt = passwordSalt;
+
+            await _accountRepository.UpdateAsync(account);
         }
     }
 }

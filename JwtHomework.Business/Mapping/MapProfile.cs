@@ -12,6 +12,11 @@ namespace JwtHomework.Business
             CreateMap<Person, PersonDto>().ReverseMap();
             CreateMap<Person, PersonAddDto>().ReverseMap();
             CreateMap<Person, PersonUpdateDto>().ReverseMap();
+
+            CreateMap<Account, AccountDto>().ReverseMap();
+            CreateMap<Account, AccountListDto>().ReverseMap();
+            CreateMap<Account, AccountUpdateDto>().ReverseMap();
+
         }
     }
 }

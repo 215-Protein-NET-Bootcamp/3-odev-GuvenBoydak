@@ -17,7 +17,7 @@ namespace JwtHomework.DataAccess
         {
             using (IDbConnection con=_db.CreateConnection())
             {
-                await con.ExecuteAsync("insert into  \"Accounts\" ( \"UserName\", \"PasswordHash\" , \"PasswordSalt\", \"Name\", \"Email\",\"LastActivity\",\"CreatedDate\",\"Status\") VALUES (@username,@passwordhash,@passwordsalt,@email,@name,@lastactivity,@createddate,@status)",
+                await con.ExecuteAsync("insert into  \"Accounts\" ( \"UserName\", \"PasswordHash\" , \"PasswordSalt\", \"Name\", \"Email\",\"LastActivity\",\"CreatedDate\",\"Status\") VALUES (@username,@passwordhash,@passwordsalt,@name,@email,@lastactivity,@createddate,@status)",
                     new
                     {
                         username=entity.UserName,
@@ -82,12 +82,12 @@ namespace JwtHomework.DataAccess
                 //DeletedDate null degilse bir silme işleminin update edildigi anlayıp status'u deleted yapıp pasif delete yapıyoruz.
                 if (entity.DeletedDate != null)
                 {
-                    con.Execute("update \"Accounts\" set \"UserName\"=@username, \"PasswordHash\"=@passwordhash, \"PasswordSalt\"=@passworsalt, \"Email\"=@email, \"Name\"=@name, \"LastActivity\"=@lastactivity,\"DeletedDate\"=@deleteddate,\"Status\"=@status where \"Id\"=@id", new
+                    con.Execute("update \"Accounts\" set \"UserName\" = @username, \"PasswordHash\" = @passwordhash, \"PasswordSalt\" = @passwordsalt, \"Email\" = @email, \"Name\" = @name, \"LastActivity\" = @lastactivity,\"DeletedDate\" = @deleteddate,\"Status\"= @status where \"Id\" = @id", new
                     {
                         id = entity.Id,
                         username = entity.UserName,
                         passwordhash = entity.PasswordHash,
-                        passwordsalt=entity.PasswordSalt,
+                        passwordsalt =entity.PasswordSalt,
                         email = entity.Email,
                         name = entity.Name,
                         lastactivity = entity.LastActivity,

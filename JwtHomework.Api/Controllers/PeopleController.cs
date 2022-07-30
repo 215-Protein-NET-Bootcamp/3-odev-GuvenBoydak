@@ -79,7 +79,7 @@ namespace JwtHomework.Api.Controllers
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(204,"İşlem başarılı"));
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute]int id)
         {
             Person person = await _personService.GetByIdAsync(id);

@@ -9,7 +9,5 @@
         public string Email { get; set; }
 
         public string Name { get; set; }
-
-        public DateTime LastActivity { get; set; }
     }
 }

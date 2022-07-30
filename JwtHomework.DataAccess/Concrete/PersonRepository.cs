@@ -17,7 +17,7 @@ namespace JwtHomework.DataAccess
         {
             using (IDbConnection con=_db.CreateConnection())
             {
-                await con.ExecuteAsync("insert into  \"People\" ( \"FirstName\", \"LastName\", \"Email\", \"Description\", \"Phone\", \"DateOfBirth\",\"CreatedDate\",\"Status\") VALUES (@firstname,@lastname,@email,@description,@phone,@dateofbirth,@createddate,@status)",
+                await con.ExecuteAsync("insert into  \"People\" ( \"FirstName\", \"LastName\", \"Email\", \"Description\", \"Phone\", \"DateOfBirth\",\"AccountId\",\"CreatedDate\",\"Status\") VALUES (@firstname,@lastname,@email,@description,@phone,@dateofbirth,@accountId,@createddate,@status)",
                     new
                     {
                         firstname=entity.FirstName,
@@ -26,7 +26,8 @@ namespace JwtHomework.DataAccess
                         phone=entity.Phone,
                         description=entity.Description,
                         dateofbirth=entity.DateOfBirth,
-                        createddate=entity.CreatedDate,
+                        accountId = entity.AccountId,
+                        createddate = entity.CreatedDate,
                         status=entity.Status
                     });
             }
@@ -70,7 +71,7 @@ namespace JwtHomework.DataAccess
         {
             using (IDbConnection con =_db.CreateConnection())
             {
-                return await con.QueryFirstOrDefaultAsync<Person>("select * from  \"People\" where \"Id\" =@id ",new {id=id });
+                return await con.QueryFirstOrDefaultAsync<Person>("select * from  \"People\" where \"Id\" = @id ",new {id = id});
             }
         }
 
@@ -81,7 +82,7 @@ namespace JwtHomework.DataAccess
                 //DeletedDate null degilse bir silme işleminin update edildigi anlayıp status'u deleted yapıp pasif delete yapıyoruz.
                 if (entity.DeletedDate != null)
                 {
-                    con.Execute("update \"People\" set  \"FirstName\"=@firstname, \"LastName\"=@lastname, \"Email\"=@email, \"Description\"=@description, \"Phone\"=@phone, \"DateOfBirth\"=@dateofbirth,\"DeletedDate\"=@deleteddate,\"Status\"=@status where \"Id\"=@id", new
+                    con.Execute("update \"People\" set  \"FirstName\"=@firstname, \"LastName\"=@lastname, \"Email\"=@email, \"Description\"=@description, \"Phone\"=@phone, \"DateOfBirth\"=@dateofbirth,\"DeletedDate\"=@deleteddate,\"Status\"=@status,\"AccountId\"=@accountId where \"Id\"=@id", new
                     {
                         id = entity.Id,
                         firstname = entity.FirstName,
@@ -90,6 +91,7 @@ namespace JwtHomework.DataAccess
                         phone = entity.Phone,
                         description = entity.Description,
                         dateofbirth = entity.DateOfBirth,
+                        accountId=entity.AccountId,
                         deleteddate = entity.DeletedDate,
                         status = entity.Status
                     });
@@ -107,9 +109,8 @@ namespace JwtHomework.DataAccess
                     entity.Phone = updatePerson.Phone != default ? entity.Phone : updatePerson.Phone;
                     entity.Description = updatePerson.Description != default ? entity.Description : updatePerson.Description;
                     entity.DateOfBirth = updatePerson.DateOfBirth != default ? entity.DateOfBirth : updatePerson.DateOfBirth;
-                    entity.UpdatedDate = updatePerson.UpdatedDate != default ? entity.UpdatedDate : updatePerson.UpdatedDate;
 
-                    con.Execute("update  \"People\" set \"FirstName\"=@firstname, \"LastName\"=@lastname, \"Email\"=@email, \"Description\"=@description, \"Phone\"=@phone, \"DateOfBirth\"=@dateofbirth,\"UpdatedDate\"=@updateddate,\"Status\"=@status where \"Id\"=@id", new
+                    con.Execute("update  \"People\" set \"FirstName\"=@firstname, \"LastName\"=@lastname, \"Email\"=@email, \"Description\"=@description, \"Phone\"=@phone, \"DateOfBirth\"=@dateofbirth,\"UpdatedDate\"=@updateddate,\"Status\"=@status,\"AccountId\"=@accountId  where \"Id\"=@id", new
                     {
 
                         id = entity.Id,
@@ -119,6 +120,7 @@ namespace JwtHomework.DataAccess
                         phone = entity.Phone,
                         description = entity.Description,
                         dateofbirth = entity.DateOfBirth,
+                        accountId=entity.AccountId,
                         updateddate = entity.UpdatedDate,
                         status = entity.Status
                     });

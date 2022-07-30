@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32516.85
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JwtHomework.DataAccess", "JwtHomework.DataAccess\JwtHomework.DataAccess.csproj", "{ABE69D43-6694-4029-80DE-A6B57A9C0875}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JwtHomework.DataAccess", "JwtHomework.DataAccess\JwtHomework.DataAccess.csproj", "{ABE69D43-6694-4029-80DE-A6B57A9C0875}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JwtHomework.Entities", "JwtHomework.Entities\JwtHomework.Entities.csproj", "{83DF6F6A-CCCC-490E-AACA-AE8364B6A1B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JwtHomework.Entities", "JwtHomework.Entities\JwtHomework.Entities.csproj", "{83DF6F6A-CCCC-490E-AACA-AE8364B6A1B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JwtHomework.Business", "JwtHomework.Business\JwtHomework.Business.csproj", "{BB698626-012E-4462-B282-2A733FB8E72D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JwtHomework.Business", "JwtHomework.Business\JwtHomework.Business.csproj", "{BB698626-012E-4462-B282-2A733FB8E72D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JwtHomework.Base", "JwtHomework.Base\JwtHomework.Base.csproj", "{5ADF474A-94CF-42A5-AD98-F4C56B96CC4F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JwtHomework.Base", "JwtHomework.Base\JwtHomework.Base.csproj", "{5ADF474A-94CF-42A5-AD98-F4C56B96CC4F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JwtHomework.Api", "JwtHomework.Api\JwtHomework.Api.csproj", "{57CC9440-9CF8-4804-BB14-A9FDAFA9F675}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JwtHomework.Api", "JwtHomework.Api\JwtHomework.Api.csproj", "{57CC9440-9CF8-4804-BB14-A9FDAFA9F675}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

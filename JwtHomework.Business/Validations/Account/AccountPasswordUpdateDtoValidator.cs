@@ -8,7 +8,6 @@ namespace JwtHomework.Business
     {
         public AccountPasswordUpdateDtoValidator()
         {
-        //    RuleFor(x => x.OldPassword).Must(CheckPassword).WithMessage("Password En az 6 karakter, en az bir sayi, en az bir harf içermelidir."); 
             RuleFor(x => x.NewPassword).Must(CheckPassword).WithMessage("Password En az 6 karakter, en az bir sayi, en az bir harf içermelidir."); 
         }
 

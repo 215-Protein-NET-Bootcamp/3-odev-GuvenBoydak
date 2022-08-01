@@ -4,7 +4,10 @@ using JwtHomework.Business;
 using JwtHomework.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RabbitMQ.Client;
 using System.Security.Claims;
+using System.Text;
+using System.Text.Json;
 
 namespace JwtHomework.Api.Controllers
 {
@@ -50,6 +53,11 @@ namespace JwtHomework.Api.Controllers
 
             //kayıt olan kullanıcı bilgileriyle bir Token yaratıyoruz.
             AccessToken token = _accountService.CreateAccessToken(registerAccount);
+
+            Account account=_mapper.Map<Account>(accountRegisterDto);
+
+            //RabbitMQ kullanarak kayıt olan kullanıcı biligilerini kuyruga gönderiyoruz ve Consumer bu bilgileri kuyruktan alıp bir mail gönderme işlemi yapıyor.
+            ProducerService.Producer(account);
 
             return CreateActionResult(CustomResponseDto<AccessToken>.Success(200,token, "İşlem başarılı"));
         }

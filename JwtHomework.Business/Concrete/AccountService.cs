@@ -91,7 +91,7 @@ namespace JwtHomework.Business
             };
 
             try
-            { 
+            {
                 await _accountRepository.AddAsync(account);
             }
             catch (Exception)

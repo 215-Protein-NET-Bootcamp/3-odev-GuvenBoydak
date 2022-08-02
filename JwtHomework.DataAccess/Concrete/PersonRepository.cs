@@ -15,20 +15,20 @@ namespace JwtHomework.DataAccess
 
         public async Task AddAsync(Person entity)
         {
-            using (IDbConnection con=_db.CreateConnection())
+            using (IDbConnection con = _db.CreateConnection())
             {
                 await con.ExecuteAsync("insert into  \"People\" ( \"FirstName\", \"LastName\", \"Email\", \"Description\", \"Phone\", \"DateOfBirth\",\"AccountId\",\"CreatedDate\",\"Status\") VALUES (@firstname,@lastname,@email,@description,@phone,@dateofbirth,@accountId,@createddate,@status)",
                     new
                     {
-                        firstname=entity.FirstName,
-                        lastname=entity.LastName, 
-                        email=entity.Email,
-                        phone=entity.Phone,
-                        description=entity.Description,
-                        dateofbirth=entity.DateOfBirth,
+                        firstname = entity.FirstName,
+                        lastname = entity.LastName,
+                        email = entity.Email,
+                        phone = entity.Phone,
+                        description = entity.Description,
+                        dateofbirth = entity.DateOfBirth,
                         accountId = entity.AccountId,
                         createddate = entity.CreatedDate,
-                        status=entity.Status
+                        status = entity.Status
                     });
             }
         }
@@ -45,16 +45,16 @@ namespace JwtHomework.DataAccess
         {
             using (IDbConnection con = _db.CreateConnection())
             {
-                IEnumerable<Person> people= await con.QueryAsync<Person>("select * from  \"People\" where \"Status\" != '2' ");
+                IEnumerable<Person> people = await con.QueryAsync<Person>("select * from  \"People\" where \"Status\" != '2' ");
                 return people.ToList();
             }
         }
 
         public async Task<List<Person>> GetAllAsync()
         {
-            using (IDbConnection con=_db.CreateConnection())
+            using (IDbConnection con = _db.CreateConnection())
             {
-              IEnumerable<Person> people =await con.QueryAsync<Person>("select * from  \"People\" ");
+                IEnumerable<Person> people = await con.QueryAsync<Person>("select * from  \"People\" ");
                 return people.ToList();
             }
         }
@@ -69,9 +69,23 @@ namespace JwtHomework.DataAccess
 
         public async Task<Person> GetByIdAsync(int id)
         {
-            using (IDbConnection con =_db.CreateConnection())
+            using (IDbConnection con = _db.CreateConnection())
             {
-                return await con.QueryFirstOrDefaultAsync<Person>("select * from  \"People\" where \"Id\" = @id ",new {id = id});
+                return await con.QueryFirstOrDefaultAsync<Person>("select * from  \"People\" where \"Id\" = @id ", new { id = id });
+            }
+        }
+
+        public async Task<List<Person>> GetPaginationAsync(int page, int limit)
+        {
+            using (IDbConnection con = _db.CreateConnection())
+            {
+                IEnumerable<Person> people = await con.QueryAsync<Person>("select * from \"People\" order by \"Id\"  limit  @limit offset  @page",
+                    new
+                    {
+                        limit = limit,
+                        page = (page - 1) * limit
+                    });
+                return people.ToList();
             }
         }
 
@@ -91,7 +105,7 @@ namespace JwtHomework.DataAccess
                         phone = entity.Phone,
                         description = entity.Description,
                         dateofbirth = entity.DateOfBirth,
-                        accountId=entity.AccountId,
+                        accountId = entity.AccountId,
                         deleteddate = entity.DeletedDate,
                         status = entity.Status
                     });
@@ -120,7 +134,7 @@ namespace JwtHomework.DataAccess
                         phone = entity.Phone,
                         description = entity.Description,
                         dateofbirth = entity.DateOfBirth,
-                        accountId=entity.AccountId,
+                        accountId = entity.AccountId,
                         updateddate = entity.UpdatedDate,
                         status = entity.Status
                     });

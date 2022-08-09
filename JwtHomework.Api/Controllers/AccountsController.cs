@@ -4,10 +4,7 @@ using JwtHomework.Business;
 using JwtHomework.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RabbitMQ.Client;
 using System.Security.Claims;
-using System.Text;
-using System.Text.Json;
 
 namespace JwtHomework.Api.Controllers
 {

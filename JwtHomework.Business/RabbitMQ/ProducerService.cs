@@ -23,7 +23,7 @@ namespace JwtHomework.Business
             //durable = RabbitMQ sunucuları restart atılırsa veriler kaybolabilir.True yaparsak veriler kalıcı hale getiriliyor.
             //exclusive = Oluşturulan kuyruga birden fazla kanalın baglanıp baglanmıyacagını belirtiyoruz.
             //autoDelete = tüm mesajlar bitince kuyruğu otomatik imha edilsini veya edilmemesini belirtiyoruz.
-            channel.QueueDeclare("email_queue", true, false, false);
+            channel.QueueDeclare("email_queue", false, false, false);
 
             //Parametreden gelen degeri önce Json formata serialize ediyoruz.
             string data = JsonSerializer.Serialize(account);
